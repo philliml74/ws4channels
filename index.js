@@ -8,11 +8,11 @@ const os = require('os');
 
 const app = express();
 
-const ZIP_CODE = process.env.ZIP_CODE || '90210';
+const WS4KP_OPTIONS = process.env.OPTIONS || '';
 const WS4KP_HOST = process.env.WS4KP_HOST || 'localhost';
 const WS4KP_PORT = process.env.WS4KP_PORT || '8080';
 const STREAM_PORT = process.env.STREAM_PORT || '9798';
-const WS4KP_URL = `http://${WS4KP_HOST}:${WS4KP_PORT}`;
+const WS4KP_URL = `http://${WS4KP_HOST}:${WS4KP_PORT}/${WS4KP_OPTIONS}`;
 const HLS_SETUP_DELAY = 2000;
 const FRAME_RATE = process.env.FRAME_RATE || 10;
 const chnlNum = process.env.CHANNEL_NUMBER || '275';
@@ -142,19 +142,19 @@ async function startBrowser() {
   page = await browser.newPage();
   await page.goto(WS4KP_URL, { waitUntil: 'networkidle2', timeout: 30000 });
 
-  try {
-    const zipInput = await page.waitForSelector('input[placeholder="Zip or City, State"], input', { timeout: 5000 });
-    if (zipInput) {
-      await zipInput.type(ZIP_CODE, { delay: 100 });
-      await waitFor(1000);
-      await page.keyboard.press('ArrowDown');
-      await waitFor(500);
-      const goButton = await page.$('button[type="submit"]');
-      if (goButton) await goButton.click();
-      else await zipInput.press('Enter');
-      await page.waitForSelector('div.weather-display, #weather-content', { timeout: 30000 });
-    }
-  } catch {}
+  // try {
+  //   const zipInput = await page.waitForSelector('input[placeholder="Zip or City, State"], input', { timeout: 5000 });
+  //   if (zipInput) {
+  //     await zipInput.type(ZIP_CODE, { delay: 100 });
+  //     await waitFor(1000);
+  //     await page.keyboard.press('ArrowDown');
+  //     await waitFor(500);
+  //     const goButton = await page.$('button[type="submit"]');
+  //     if (goButton) await goButton.click();
+  //     else await zipInput.press('Enter');
+  //     await page.waitForSelector('div.weather-display, #weather-content', { timeout: 30000 });
+  //   }
+  // } catch {}
 
   await page.setViewport({ width: 1280, height: 720 });
 }
